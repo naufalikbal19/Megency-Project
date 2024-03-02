@@ -1,0 +1,11 @@
+C:\Users\user\Desktop\Universe Projek\gamemodes\CMD\PLAYER.pwn(242) : îøèáêà 020: íåâåðíîå íàçâàíèå èäåíòèôèêàòîðà ""
+C:\Users\user\Desktop\Universe Projek\gamemodes\CMD\PLAYER.pwn(242) -- (264) : îøèáêà 010: íåâåðíàÿ ôóíêöèÿ èëè îáúÿâëåíèå
+C:\Users\user\Desktop\Universe Projek\gamemodes\CMD\PLAYER.pwn(242) -- (265) : îøèáêà 010: íåâåðíàÿ ôóíêöèÿ èëè îáúÿâëåíèå
+C:\Users\user\Desktop\Universe Projek\gamemodes\CMD\PLAYER.pwn(242) -- (265) : ôàòàëüíàÿ îøèáêà 107: ñëèøêîì ìíîãî îøèáîê íà îäíîé ñòðîêå
+
+Êîìïèëÿöèÿ îñòàíîâëåíà.
+
+Pawn compiler 3.2.3664	 	 	Copyright (c) 1997-2016, ITB CompuPhase
+
+
+Îøèáîê:4.
