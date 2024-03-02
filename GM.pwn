@@ -75,7 +75,6 @@ new timercj[MAX_PLAYERS];
 	#define VELOCITY_MULT	(3.0)
 #define VELOCITY_NORM	(1.0)
 #define HEIGHT_GAIN		(0.5)
-
 new
 	fly[MAX_PLAYERS];
 //new vtoylist = mS_INVALID_LISTID;
@@ -135,7 +134,12 @@ new Float:lZ[MAX_PLAYERS];
 
 //#define NOTICE_ANTIFAKESPAWN "Anda mengunakan fake spawn"
 enum
-{
+{//dialog trashman//
+	// DIALOG_GPSTRASHMAN,
+	// DIALOG_GPSTRASH,
+	// DIALOG_TRACK_TRASH,
+	DIALOG_TRASHMASTER,
+	//dialog trashman
 	DIALOG_MAKE_CHAR,
 	DIALOG_CHARLIST,
 	DIALOG_VERIFYCODE,
@@ -670,6 +674,7 @@ new TogOOC = 1;
 //-----[ Player Data ]-----	
 enum E_PLAYERS
 {
+	EditingTrash,
 	pID,
 	pUCP[22],
 	pExtraChar,
@@ -1223,7 +1228,6 @@ Iterator: DamageLog<MAX_DAMAGE>;
 
 //Variable Player Damage Logs
 new GetDamageID[MAX_PLAYERS];
-
 enum    E_LOG
 {
 	bool:logExist,
@@ -1539,12 +1543,27 @@ main()
 #include "DATA\ROBBANK.pwn"
 //DYNAMIC SGRP
 #include "DYNAMIC\DEALERSHIP.pwn"
+#include "DYNAMIC\TRASH.pwn"
 // MODSHOP
 #include "DATA\MODSHOP.pwn"
 #include "DATA\MODSHOP\main.pwn"
 #include "DATA\VTOYS.pwn"
 
 #include "DATA\DIALOG.pwn"
+// trashman system//
+new TrashVeh[20];
+new HaveTrash[MAX_PLAYERS];
+new VehTrashLog[MAX_VEHICLES]; //TEMPORER VEHICLE TRASH STORAGE
+new totaltrash;
+	IsATrashVeh(carid)
+	{
+		for(new v = 0; v < sizeof(TrashVeh); v++) {
+			if(carid == TrashVeh[v]) return 1;
+		}
+		return 0;
+	}
+#include "JOB\SIDEJOB\TRASHMAN.pwn"
+//trashman system
 //-----[ Discord Status ]-----	
 forward BotStatus();
 public BotStatus()
@@ -1627,6 +1646,7 @@ public OnGameModeInit()
 	mysql_tquery(g_SQL, "SELECT * FROM `workshop`", "LoadWorkshop");
 	mysql_tquery(g_SQL, "SELECT * FROM `dealership`", "LoadDealership");
 	mysql_tquery(g_SQL, "SELECT * FROM `parks`", "LoadPark");
+	mysql_tquery(g_SQL, "SELECT * FROM `trash`", "LoadTrash");
 	mysql_tquery(g_SQL, "SELECT * FROM `speedcameras`", "LoadSpeedCam");
 	mysql_tquery(g_SQL, "SELECT * FROM `actor`", "LoadActor");
 	mysql_tquery(g_SQL, "SELECT * FROM `pedagang`", "LoadPedagang");
@@ -1679,6 +1699,10 @@ public OnGameModeInit()
 	BlockGarages(.text="NO ENTER");
 	//Audio_SetPack("default_pack");	
 	
+	//trashman system//
+	AddTrashVehicle();
+	//trashman system//
+
 	new strings[150];
 	
 	for(new i = 0; i < sizeof(rentVehicle); i ++)
@@ -5695,6 +5719,21 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 			}
 		}
 	}
+	if(newstate == PLAYER_STATE_DRIVER)
+    {
+	//new trashman
+		if(IsATrashVeh(vehicleid))
+		{
+			if(pData[playerid][pSideJob] != 5)
+			{
+				ShowPlayerDialog(playerid, DIALOG_TRASHMASTER, DIALOG_STYLE_MSGBOX, "Side Job - Trash Master", "Anda akan bekerja sebagai Trash Master?", "Start Job", "Close");
+			}
+			else if(pData[playerid][pSideJob] == 5)
+			{
+			}
+		}
+		//new trashman
+	}
 	if(newstate == PLAYER_STATE_DRIVER || newstate == PLAYER_STATE_PASSENGER)
     {
     	pData[playerid][pMarkTemp] = vehicleid;
@@ -6281,6 +6320,14 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, weaponid, bodypart)
 }
 public OnPlayerUpdate(playerid)
 {
+	//ox trash system//
+		// if(IsPlayerInRangeOfPoint(playerid, 4.0, 2422.70, -2101.56,13.58))
+		// 	{
+		// 		TextDrawShowForPlayer(playerid, OXtdpasive);
+		// 		TextDrawShowForPlayer(playerid, OXtdpasive1);
+		// 		SelectTextDraw(playerid, 0x0000FF);
+		// 	}
+	//ox trash system//	
 	//afk_tick[playerid]++;
 	if(!fly[playerid])return 1;
 
@@ -7149,6 +7196,26 @@ stock SendDiscordMessage(channel, message[]) {
 public OnPlayerClickTextDraw(playerid, Text:clickedid)
 {
 	// PHONE  TEXTDRAWS
+	if(clickedid == OXtdpasive) 
+	{
+		new newtext[41];
+		format(newtext, sizeof(newtext), "Ambil Sampah");
+		TextDrawSetString(oxTD[playerid][7], newtext);   
+		for(new idx; idx < 7; idx++) 
+		{PlayerTextDrawShow(playerid, oxTD[playerid][idx]);}
+	}
+	if(clickedid == OXtdpasive1) 
+	{
+		new newtext[41];
+		format(newtext, sizeof(newtext), "Ambil Sampah");
+		TextDrawSetString(oxTD[playerid][7], newtext);   
+		for(new idx; idx < 7; idx++) 
+		{PlayerTextDrawShow(playerid, oxTD[playerid][idx]);}
+	}
+	if(clickedid == oxTD[playerid][7]) 
+	{
+		callcmd::unloadtrash(playerid);
+	}
 	if(clickedid == calltd) 
 	{
 		if(pData[playerid][pPhoneStatus] == 0) 

@@ -17767,6 +17767,20 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			}
 		}
 	}
+	if(dialogid == DIALOG_TRASHMASTER)
+	{
+		new vehicleid = GetPlayerVehicleID(playerid);
+		if(response)
+		{			
+			pData[playerid][pSideJob] = 5;
+			Info(playerid, "Kamu memulai sidejob trash master, pergi untuk mencari tong sampah yang penuh di sekeliling kota");
+		}
+		else
+		{
+			RemovePlayerFromVehicle(playerid);
+			SetTimerEx("RespawnPV", 3000, false, "d", vehicleid);
+		}
+	}
 	if(dialogid == DIALOG_BOOMBOX)
     {
     	if(!response)

